@@ -1,9 +1,11 @@
 package saturationPolicy;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.*;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
-public class SaturationPolicyExamples {
+public class DiscardOldest {
     static class MyThread extends Thread {
         LocalDateTime creation;
 
@@ -36,7 +38,7 @@ public class SaturationPolicyExamples {
                 super(
                         1,
                         1,
-                        0L,
+                        10000,
                         TimeUnit.SECONDS,
                         new LinkedBlockingQueue(1)
 //                        new LinkedBlockingQueue()
@@ -46,15 +48,21 @@ public class SaturationPolicyExamples {
 
 
         MyThreadPool pool = new MyThreadPool();
-//        pool.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
-//        pool.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardPolicy());
-        pool.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        pool.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
 
         for (int i = 1; i < 16; i++) {
             MyThread thread = new MyThread();
             pool.execute(thread);
             Thread.sleep(100);
+//            if (i == 10) {
+//                pool.shutdown();
+//                System.out.println();
+//                System.out.println("Last before Shutdown  " + thread.getCreation().toString());
+//                System.out.println("Shutdown!");
+//            }
+        }
     }
 }
-}
+
+
 

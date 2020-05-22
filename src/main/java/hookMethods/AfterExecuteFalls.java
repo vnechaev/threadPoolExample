@@ -17,15 +17,15 @@ public class AfterExecuteFalls {
                 super.beforeExecute(t, r);
 //                throw new RuntimeException("Error in beforeExecute()");
             }
-//
-//            @Override
-//            protected void afterExecute(Runnable r, Throwable t) {
-//                //Not executed if beforeExecute throw Exception
-//                super.afterExecute(r, t);
-//                if (t != null) {
-//                    System.out.println("After execute catch exception " + t.getClass());
-//                }
-//            }
+
+            @Override
+            protected void afterExecute(Runnable r, Throwable t) {
+                //Not executed if beforeExecute throw Exception
+                super.afterExecute(r, t);
+                if (t != null) {
+                    System.out.println("After execute catch exception " + t.getClass());
+                }
+            }
 
             public MyThreadPool() {
                 super(5,
@@ -53,9 +53,9 @@ public class AfterExecuteFalls {
 
 //        threadPool.execute(() -> System.out.println("hello, world!"));
 //        threadPool.execute(() -> System.out.println(5 / 0));
-        threadPool.submit(() -> System.out.println(5 / 0));
-//        threadPool.execute(() -> {throw new RuntimeException("Error in executed Thread");});
+//        threadPool.submit(() -> System.out.println(5 / 0));
+        threadPool.execute(() -> {throw new RuntimeException("Error in executed Thread");});
 //        threadPool.execute(() -> {throw new OutOfMemoryError("Error in executed Thread");});
-        threadPool.shutdown();
+//        threadPool.shutdown();
     }
 }
